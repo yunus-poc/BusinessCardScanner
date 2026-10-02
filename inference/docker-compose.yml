@@ -1,0 +1,75 @@
+# Self-hosted LLM for business-card classification (llama.cpp server, OpenAI-compatible API).
+# CPU by default; add docker-compose.gpu.yml for NVIDIA GPUs (recommended for the latency target).
+#
+#   docker compose up -d                                          # CPU
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d   # GPU
+#
+# Only BusinessCard.Api may reach this service. Never expose it to the internet or to mobile clients.
+name: businesscard-llm
+
+services:
+  llm:
+    # Pin a specific build tag or digest in production (see README → "Pinning the image").
+    image: ${LLAMA_IMAGE:-ghcr.io/ggml-org/llama.cpp:server}
+    restart: unless-stopped
+    command:
+      - --model
+      - /models/${LLM_MODEL_FILE:-microsoft_Phi-4-mini-instruct-Q4_K_M.gguf}
+      # Name reported by the API and logged by the backend as LlmModel.
+      - --alias
+      - ${LLM_MODEL_ALIAS:-phi-4-mini-instruct}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      # 4 concurrent requests with continuous batching; 6144 / 4 = 1536 tokens per request,
+      # far more than a card prompt (~300–700 tokens) plus its ~60-token answer.
+      - --parallel
+      - ${LLM_PARALLEL:-4}
+      - --ctx-size
+      - ${LLM_CTX_SIZE:-6144}
+      - --threads
+      - ${LLM_THREADS:-8}
+      # Keep the model resident: memory-mapped and locked so it is never swapped out (no cold starts).
+      - --load-mode
+      - mmap+mlock
+      # Attack surface: no browser UI; /slots can expose in-flight prompts (card PII), so it is off.
+      - --no-webui
+      - --no-slots
+      # Prometheus metrics (token rates, queue) for internal monitoring only.
+      - --metrics
+      - --api-key-file
+      - /run/secrets/llm_api_key
+      # Hard ceiling for a stuck connection; the backend's own timeout (~2.5 s) is far shorter.
+      - --timeout
+      - "30"
+    volumes:
+      - ./models:/models:ro
+    secrets:
+      - llm_api_key
+    # Local development: loopback only. In production, attach to the API's private network
+    # instead of publishing a port (see README → "Network placement").
+    ports:
+      - "127.0.0.1:${LLM_PORT:-8080}:8080"
+    ulimits:
+      memlock: -1 # required for mlock
+    healthcheck:
+      # /health is unauthenticated: 503 while loading, 200 once the model is ready.
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          memory: ${LLM_MEMORY_LIMIT:-6g}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+secrets:
+  llm_api_key:
+    file: ./secrets/llm_api_key.txt

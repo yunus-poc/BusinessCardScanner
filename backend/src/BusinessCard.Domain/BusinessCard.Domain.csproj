@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Core models only. No package references: the domain must not know about
+       HTTP, Graph, LLMs or ASP.NET Core. -->
+</Project>

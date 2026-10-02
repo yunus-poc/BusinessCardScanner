@@ -1,0 +1,46 @@
+# ---- Secrets and local configuration (never commit) ----
+appsettings.Development.json
+appsettings.*.local.json
+*.local.json
+.env
+.env.*
+!.env.example
+dart_defines.json
+dart_defines.*.json
+!dart_defines.example.json
+*.pfx
+*.p12
+*.pem
+*.key
+secrets/
+
+# ---- .NET ----
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+*.trx
+coverage*/
+*.coverage
+*.coveragexml
+
+# ---- IDEs / OS ----
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---- LLM model weights (download, never commit) ----
+inference/models/
+*.gguf
+*.onnx
+*.safetensors
+
+# ---- Benchmark outputs (may contain OCR text) ----
+benchmark/results/
+
+# Flutter-specific ignores live in mobile/.gitignore

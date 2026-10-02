@@ -1,0 +1,16 @@
+# NVIDIA GPU override. Requires the NVIDIA driver and NVIDIA Container Toolkit on the host.
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+services:
+  llm:
+    image: ${LLAMA_IMAGE_CUDA:-ghcr.io/ggml-org/llama.cpp:server-cuda}
+    environment:
+      # Whole model in VRAM (~2.5 GB weights + KV cache); flash attention for faster prompt processing.
+      LLAMA_ARG_N_GPU_LAYERS: all
+      LLAMA_ARG_FLASH_ATTN: "on"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

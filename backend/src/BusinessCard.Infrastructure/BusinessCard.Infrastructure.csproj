@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <!-- Server-only project: HttpClientFactory, Options, health checks come from the shared framework. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- On-Behalf-Of token acquisition for Microsoft Graph (IAuthorizationHeaderProvider, MSAL exceptions). -->
+    <PackageReference Include="Microsoft.Identity.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessCard.Application\BusinessCard.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The prompt and output schema are shared with the inference smoke test.
+         Embedding the files (not copies) means there is exactly one version of each. -->
+    <EmbeddedResource Include="..\..\..\inference\contract\system-prompt.txt" LogicalName="BusinessCard.Llm.system-prompt.txt" />
+    <EmbeddedResource Include="..\..\..\inference\contract\classification.schema.json" LogicalName="BusinessCard.Llm.classification.schema.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="BusinessCard.UnitTests" />
+    <InternalsVisibleTo Include="BusinessCard.IntegrationTests" />
+  </ItemGroup>
+</Project>

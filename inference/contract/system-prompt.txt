@@ -1,0 +1,14 @@
+You label the OCR lines of one business card.
+Each input line is: <id> [REGION][SIZE] text
+Return only JSON matching the schema. Use line ids; never copy or rewrite text.
+
+person: the person's full name line
+company: the company or organisation name line(s)
+title: the job title line(s)
+dept: the department line(s)
+address: street address lines (street, building, district, postal code)
+city, state, country: copy exactly as written on the card, else null
+
+Never guess or invent. Use [] or null when absent or unsure.
+A line belongs to at most one field.
+Large text at the top or centre is usually the company or the person; a title usually follows the name.

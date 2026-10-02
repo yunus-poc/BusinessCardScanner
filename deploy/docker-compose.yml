@@ -1,0 +1,45 @@
+# Single-host deployment: BusinessCard.Api + the self-hosted LLM on one private Docker network.
+#
+#   cp deploy/.env.example deploy/.env      # fill in Entra IDs and secrets (see README → Deployment)
+#   docker compose -f deploy/docker-compose.yml up -d --build
+#
+# The API reaches the model as http://llm:8080 over the compose network. Put a TLS-terminating
+# reverse proxy or ingress in front of the API port; do not expose it as plain HTTP to the internet.
+name: businesscard
+
+include:
+  # LLM service (llama.cpp + Phi-4-mini). Its port stays bound to the host's loopback only.
+  - path: ../inference/docker-compose.yml
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    image: ${API_IMAGE:-businesscard-api:local}
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      Ai__BaseUrl: http://llm:8080
+      Ai__Model: ${LLM_MODEL_ALIAS:-phi-4-mini-instruct}
+    ports:
+      - "${API_BIND:-127.0.0.1}:${API_PORT:-5080}:8080"
+    # No depends_on the LLM: the API works without it (deterministic fallback).
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          memory: ${API_MEMORY_LIMIT:-512m}
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "5"

@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "person": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 1000 }, "maxItems": 2 },
+    "company": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 1000 }, "maxItems": 3 },
+    "title": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 1000 }, "maxItems": 3 },
+    "dept": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 1000 }, "maxItems": 2 },
+    "address": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 1000 }, "maxItems": 4 },
+    "city": { "type": ["string", "null"], "maxLength": 60 },
+    "state": { "type": ["string", "null"], "maxLength": 60 },
+    "country": { "type": ["string", "null"], "maxLength": 60 }
+  },
+  "required": ["person", "company", "title", "dept", "address", "city", "state", "country"],
+  "additionalProperties": false
+}

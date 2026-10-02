@@ -1,0 +1,7 @@
+{
+  "API_BASE_URL": "http://10.0.2.2:5115",
+  "ENTRA_TENANT_ID": "<directory-tenant-id>",
+  "ENTRA_CLIENT_ID": "<mobile-app-client-id>",
+  "ENTRA_API_SCOPE": "api://<api-client-id>/access_as_user",
+  "ENTRA_REDIRECT_URI": "com.example.businesscardscanner://oauthredirect"
+}

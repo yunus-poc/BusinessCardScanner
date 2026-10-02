@@ -1,0 +1,6 @@
+1 [TOP][LARGE] ACME TECHNOLOGY
+2 [CENTER][LARGE] Ahmet Yılmaz
+3 [CENTER][NORMAL] Enterprise Solutions Manager
+4 [CENTER][SMALL] Digital Transformation
+8 [BOTTOM][SMALL] Maslak Mah. Büyükdere Cad. No:255
+9 [BOTTOM][SMALL] 34485 Sarıyer/İstanbul

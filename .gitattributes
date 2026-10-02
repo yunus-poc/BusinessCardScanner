@@ -1,0 +1,13 @@
+# Normalize line endings in the repository regardless of each developer's core.autocrlf.
+* text=auto eol=lf
+
+# Windows-only formats keep CRLF.
+*.sln  text eol=crlf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binary assets.
+*.png  binary
+*.jpg  binary
+*.jar  binary
+*.gguf binary

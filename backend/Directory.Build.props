@@ -1,0 +1,25 @@
+<Project>
+  <!-- Shared compiler settings for every backend project. Keep this file small:
+       anything project-specific belongs in the individual .csproj. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- CA1848 (LoggerMessage delegates) and CA2007 (ConfigureAwait) add noise without
+         measurable value for an ASP.NET Core service of this size. -->
+    <NoWarn>$(NoWarn);CA1848;CA2007</NoWarn>
+  </PropertyGroup>
+
+  <!-- IsTestProject is not yet known when this file is evaluated, so match on the name. -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <IsPackable>false</IsPackable>
+    <!-- Test method names use underscores for readability (Method_Scenario_Expected). -->
+    <NoWarn>$(NoWarn);CA1707;CA1515;CA2234</NoWarn>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,8 @@
+# Copy to android/key.properties (git-ignored). Never commit the real file or the keystore.
+# Create the keystore once (keep it and its passwords in your secret store; losing it means you
+# cannot update the app on Google Play unless Play App Signing is enabled):
+#   keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+storeFile=/absolute/path/to/upload-keystore.jks
+storePassword=<store password>
+keyAlias=upload
+keyPassword=<key password>

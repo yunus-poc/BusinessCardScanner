@@ -1,0 +1,19 @@
+# Build context is the repository root; send only what the backend image needs.
+**/bin/
+**/obj/
+**/TestResults/
+.git/
+.vs/
+.idea/
+mobile/
+backend/tests/
+inference/models/
+inference/secrets/
+**/secrets/
+**/.env
+**/.env.*
+**/appsettings.Development.json
+**/*.gguf
+**/*.pfx
+**/*.pem
+**/*.key
